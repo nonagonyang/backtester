@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+      <h2>Backtesting</h2>
+      <p>
+          Backtesting is the general method for seeing how well a strategy or model would have done ex-post. 
+          Backtesting assesses the viability of a trading strategy by discovering how it would play out using historical data. 
+          If backtesting works, traders and analysts may have the confidence to employ it going forward.
+      </p>
+
+      <form method="POST">
+
+          {{ form.hidden_tag() }}
+      
+          {% for field in form
+          if field.widget.input_type != 'hidden' %}
+          <p>
+              {{ field.label }}
+              {{ field(class_="form-control") }}
+      
+              {% for error in field.errors %}
+              <span class="form-text text-danger">{{ error }}</span>
+              {% endfor %}
+          </p>
+          {% endfor %}
+      
+          <button class="btn btn-success" type="submit">Test</button>
+      
+      </form>
+ 
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div>
+    <h1>Browse QQQ stocks</h1>
+    
+    <!-- <div class="row no-gutters">
+        <div class="col">
+             <input class="form-control border-secondary border-right-0 rounded-0" type="search" value="AAPL" id="example-search-input4">
+        </div>
+        <div class="col-auto">
+             <button class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right" type="button">
+                <i class="fa fa-search"></i>
+             </button>
+        </div>
+   </div> -->
+
+    {% if request.endpoint != None %}
+
+        <form  action="/stocks">
+           <input name="q" class="form-control" placeholder="Search Stock Symbol" id="search">
+          <button class="btn btn-default">
+            <span class="fa fa-search"></span>
+          </button>
+        </form>
+    {% endif %}
+    <!-- <form method="get">
+        <select name="filter" id="filter">
+            <option value="all_stocks">All Stocks</option>
+            <option {% if request.args.get("filter") == "new_closing_highs"  %} selected="selected" {% endif %}
+            value="new_closing_highs" >New Closing Highs</option>
+            <option {% if request.args.get("filter") == "new_closing_lows"  %} selected="selected" {% endif %}
+            value="new_closing_lows">New Closing Lows</option>
+            <option {% if request.args.get("filter") == "rsi_overbought"  %} selected="selected" {% endif %}
+            value="new_intraday_highs">RSI Overbought</option>
+            <option  {% if request.args.get("filter") == "rsi_oversold"  %} selected="selected" {% endif %}
+            value="new_intraday_lows">RSI Oversold</option>
+           
+        </select>
+
+        <input type="submit">
+    </form> -->
+
+
+    <div class="container">
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">SYMBOL</th>
+                    <th scope="col">NAME</th>
+                
+
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td><a href="/stocks/{{stock.symbol}}">{{ stock.symbol}}</a></td>
+                    <td>{{ stock.name}}</td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table> 
+    </div>
+    
+    <a href="/signup" class="btn btn-primary">Sign up to see more</a>
+  </div>
+{% endblock %}

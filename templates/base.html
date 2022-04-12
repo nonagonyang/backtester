@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BACKTRADER</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="https://unpkg.com/popper"></script>
+  <script src="https://unpkg.com/bootstrap"></script>
+
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="shortcut icon" href="/static/favicon.ico">
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+<nav class="navbar navbar-expand" aria-label="breadcrumb">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <ol class="breadcrumb">
+        <a href="/" class="navbar-brand">
+          <img src="https://media.istockphoto.com/vectors/bold-letter-b-logo-design-element-negative-space-style-two-letters-bc-vector-id1165333600?k=20&m=1165333600&s=612x612&w=0&h=C1Yb7Hk6EeSdxMoGQY1Tj8bRk-aXtAG4CraqYRRqxqg=" alt="logo">
+          <span>BackTrader</span>
+        </a>
+        
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li cclass="nav-item"><a class="nav-link" href="/stocks">Stocks</a></li>
+        <li class="nav-item"><a class="nav-link" href="/backtesting">Backtesting</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tests">Tests</a></li>
+      </ol>
+      
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <!-- {% if request.endpoint != None %}
+      <li>
+        <form class="navbar-form navbar-right" action="/stocks">
+           <input name="q" class="form-control" placeholder="Search Stock Symbol" id="search">
+          <button class="btn btn-default">
+            <span class="fa fa-search"></span>
+          </button>
+        </form>
+      </li>
+      {% endif %} -->
+
+      
+      {% if not g.user %}
+     <li><a href="/signup">Sign up</a></li>
+      <li><a href="/login">Log in</a></li>
+      {% else %}
+      <li>
+        <li> <a>{{ g.user.username }}</a></li>
+      </li>
+      <li><a href="/logout">Log out</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  {% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{ category }}">{{ message }}</div>
+  {% endfor %}
+
+  {% block content %}
+  {% endblock %}
+
+</div>
+</body>
+</html>

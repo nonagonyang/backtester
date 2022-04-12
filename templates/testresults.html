@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Test Results</h1>
+<div>
+    <div class="container">
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Test_ID</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Strategy</th>
+                    <th scope="col">Start_Date</th>
+                    <th scope="col">End_Date</th>
+                    <th scope="col">Initial Cash</th>
+                    <th scope="col">Result Cash</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if tests %}
+                {% for test in tests %}
+                <tr>
+                    <td>{{test.id}}</td>
+                    <td>{{test.stock.symbol}}</td>
+                    <td>{{test.strategy.name}}</td>
+                    <td>{{ test.start_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ test.end_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{test.initial_cash}}</td>  
+                    <td>{{test.result_cash}}</td> 
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table> 
+    </div>
+  </div>
+
+{% endblock %}
