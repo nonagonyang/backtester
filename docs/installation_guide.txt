@@ -1,0 +1,15 @@
+
+
+Python version 3.7.12
+External API: Alpaca API requires API_KEY_ID and API_SECRET_KEY
+
+
+
+Command line:
+Create PostgreSQL database: createdb database_name
+Run seed.py to create database relations and populate some of the tables.
+Set up virtual environment in the working directory: python3 -m venv venv
+Activate the virtual environment: source venv/bin/activate 
+Install dependencies from requirements.txt 
+Set flask environment: export FLASK_ENV=development 
+Start the server:flask run 
