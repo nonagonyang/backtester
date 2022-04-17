@@ -6,26 +6,28 @@
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">Test_ID</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Strategy</th>
                     <th scope="col">Start_Date</th>
                     <th scope="col">End_Date</th>
                     <th scope="col">Initial Cash</th>
                     <th scope="col">Result Cash</th>
+                    <th scope="col">Result</th>
+
+                    
                 </tr>
             </thead>
             <tbody>
                 {% if tests %}
                 {% for test in tests %}
                 <tr>
-                    <td>{{test.id}}</td>
                     <td>{{test.stock.symbol}}</td>
                     <td>{{test.strategy.name}}</td>
                     <td>{{ test.start_date.strftime('%Y-%m-%d') }}</td>
                     <td>{{ test.end_date.strftime('%Y-%m-%d') }}</td>
                     <td>{{test.initial_cash}}</td>  
                     <td>{{test.result_cash}}</td> 
+                    <td>{{test.result}}<span><a href="/tests/{{test.id}}"> details</a></span></td>
                 </tr>
                 {% endfor %}
                 {% endif %}

@@ -40,8 +40,9 @@ def test_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
 
     print("starting portfolio value %.2f" % cerebro.broker.getvalue())
     cerebro.run()
+    runstrats=cerebro.run()
     print("ending portfolio value %.2f" % cerebro.broker.getvalue())
-    return cerebro.broker.getvalue()
+    return [cerebro.broker.getvalue(),logs,runstrats]
 
 
 

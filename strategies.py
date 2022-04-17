@@ -1,5 +1,6 @@
 import backtrader
 from datetime import date, datetime, time, timedelta
+from constants import logs
 
 # Create a Stratey
 
@@ -8,7 +9,8 @@ class BuySlightDipStrategy(backtrader.Strategy):
     def log(self, txt, dt=None):
         ''' Logging function fot this strategy'''
         dt = dt or self.datas[0].datetime.date(0)
-        print('%s, %s' % (dt.isoformat(), txt))
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
@@ -31,7 +33,7 @@ class BuySlightDipStrategy(backtrader.Strategy):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log('Close, %.2f' % self.dataclose[0])
+        # self.log('Close, %.2f' % self.dataclose[0])
 
         if self.order:
             return
@@ -67,10 +69,13 @@ class OpeningRangeBreakout(backtrader.Strategy):
         self.order = None
     
     def log(self, txt, dt=None):
-        if dt is None:
-            dt = self.datas[0].datetime.datetime()
-
-        print('%s, %s' % (dt, txt))
+        # if dt is None:
+        #     dt = self.datas[0].datetime.datetime()
+        # logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt, txt))
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -158,9 +163,10 @@ class SmaStrategy(backtrader.Strategy):
                               period=self.params.ma_period)
 
         
-    def log(self, txt):
-        dt = self.datas[0].datetime.date(0).isoformat()
-        print(f'{dt}, {txt}')
+    def log(self, txt,dt=None):
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -202,56 +208,3 @@ class SmaStrategy(backtrader.Strategy):
                 self.order = self.sell()
 
 
-
-# class BollingerbandStrategy(backtrader.Strategy):
-# # Set a bollinger band indicator, buy when the price exceeds the lower band, sell when price exceeds higher band.
-# # Set the parameters for the bollinger band. I chose a 21 day period as that mimics the number of days in a trading month, a smaller standard deviation on the band
-# # gives more entry & exit opportunities
-#     params = dict(
-#         bperiod=21
-#         ,dev=1.25)
-    
-#     def __init__(self):
-        
-#         #Define Bollinger band
-        
-#         self.boll = backtrader.ind.BollingerBands(period=self.p.bperiod, devfactor=self.p.dev, plot=True, plotname='Bollinger Band', subplot=False)
-        
-#         #Define cross-over points
-        
-#         self.buysig = backtrader.indicators.CrossOver(self.data0, self.boll.lines.bot, plotname='buy signal', plot=True)
-#         self.sellsig = backtrader.indicators.CrossOver(self.data0, self.boll.lines.top,plotname='sell signal', plot=True)
-        
-#     # def notify_order(self, order):
-#     #     if order.status in [order.Submitted, order.Accepted]:
-#     #         return
-
-#     #     if order.status in [order.Completed]:
-#     #         if order.isbuy():
-#     #             self.log(f'BUY EXECUTED --- Price: {order.executed.price:.2f}, Cost: {order.executed.value:.2f}, Commission: {order.executed.comm:.2f}')
-#     #             self.price = order.executed.price
-#     #             self.comm = order.executed.comm
-#     #         else:
-#     #             self.log(f'SELL EXECUTED --- Price: {order.executed.price:.2f}, Cost: {order.executed.value:.2f}, Commission: {order.executed.comm:.2f}')
-
-#     #         self.bar_executed = len(self)
-
-#     #     elif order.status in [order.Canceled, order.Margin,
-#     #                           order.Rejected]:
-#     #         self.log('Order Failed')
-
-#     #     self.order = None
-
-#     # def notify_trade(self, trade):
-#     #     if not trade.isclosed:
-#     #         return
-
-#     #     self.log(f'OPERATION RESULT --- Gross: {trade.pnl:.2f}, Net: {trade.pnlcomm:.2f}')
-#     def next(self):
-        
-#         if not self.position:  # not in the market
-#             if self.buysig > 0:  # if fast crosses slow to the upside
-#                 self.order_target_size(target=3000)   # enter long
-                
-#         elif self.sellsig > 0:  # in the market & cross to the downside
-#             self.order_target_size(target=0)   # close long position

@@ -1,10 +1,11 @@
-# from symtable import Symbol
 from flask import Flask, request, redirect, render_template,session,g,flash
 from sqlalchemy.exc import IntegrityError
 from models import db, connect_db, Stock, StockPrice,Strategy,Test,User
 from forms import BackTestingForm,UserAddForm,LoginForm
 from test_strategy import test_strategy
+# from show_plot import getBacktestChart
 from constants import *
+
 
 
 app = Flask(__name__)
@@ -120,21 +121,24 @@ def logout():
 def homepage():
     # if CURR_USER_KEY in session:
     #     del session[CURR_USER_KEY]
+    if not g.user:
+        form = LoginForm()
 
-    form = LoginForm()
+        if form.validate_on_submit():
+            user = User.authenticate(form.username.data,
+                                    form.password.data)
 
-    if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
-                                 form.password.data)
+            if user:
+                do_login(user)
+                flash(f"Hello, {user.username}!", "success")
+                return redirect("/stocks")
 
-        if user:
-            do_login(user)
-            flash(f"Hello, {user.username}!", "success")
-            return redirect("/stocks")
-
-        flash("Invalid credentials.", 'danger')
+            flash("Invalid credentials.", 'danger')
+        else:
+            return render_template('index.html', form=form)
     else:
-        return render_template('index.html', form=form)
+        user=User.query.filter_by(id=session[CURR_USER_KEY]).first()
+        return render_template('user_details.html',user=user)
 
 
 
@@ -175,6 +179,7 @@ def new_test():
     form.stock_id.choices=[(stock.id, stock.symbol) for stock in Stock.query.order_by('symbol')]
 
     if form.validate_on_submit():
+        user_id=session[CURR_USER_KEY]
         cash_amount_str=form.cash_amount.data
         cash_amount=int(cash_amount_str)
         strategy_id=int(form.strategy_id.data)
@@ -185,13 +190,20 @@ def new_test():
         stock_symbol=stock.symbol
         start_date=form.start_date.data
         end_date=form.end_date.data
-        result_cash=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)
-        new_test=Test(stock_id=stock_id,strategy_id=strategy_id,
+        result_cash=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[0]
+        if result_cash-cash_amount>0:
+            result=f'You have earned {round((result_cash-cash_amount),2)}'
+        else:
+            result=f'You have lost {round((cash_amount-result_cash),2)}'
+        logs=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[1]
+        # runstrats=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[2]
+        # plot=getBacktestChart(runstrats)
+        new_test=Test(stock_id=stock_id,strategy_id=strategy_id,user_id=user_id,
                 start_date=start_date,end_date=end_date,
-                initial_cash=cash_amount,result_cash=round(result_cash,2))
+                initial_cash=cash_amount,result_cash=round(result_cash,2),result=result,logs=logs)
         db.session.add(new_test)
         db.session.commit()
-        return redirect(f"/tests")
+        return redirect(f"/tests/{new_test.id}")
 
     return render_template("backtesting.html",form=form)
 
@@ -200,9 +212,18 @@ def show_tests():
     if not g.user:
         flash("Access unauthorized. Sign up or log in.", "danger")
         return redirect("/")
-    tests=Test.query.all()
+    user_id=session[CURR_USER_KEY]
+    tests=Test.query.filter_by(user_id=user_id).all()
     return render_template("testresults.html", tests=tests)
 
+@app.route("/tests/<test_id>")
+def show_test_result(test_id):
+    if not g.user:
+        flash("Access unauthorized. Sign up or log in.", "danger")
+        return redirect("/")
+    test=Test.query.filter_by(id=test_id).first()
+    logs=test.logs.split('"')
+    return render_template("test_details.html", test=test,logs=logs)
 
 
 @app.errorhandler(404)
@@ -214,7 +235,6 @@ def page_not_found(e):
 @app.after_request
 def add_header(req):
     """Add non-caching headers on every request."""
-
     req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     req.headers["Pragma"] = "no-cache"
     req.headers["Expires"] = "0"

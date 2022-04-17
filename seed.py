@@ -41,7 +41,6 @@ for stock in stocks:
 
 
 
-
 #populate the stockprices table in database by using alpaca api
 
 #if we need to populate more than 10000 stocks, loop through the stocks in chunk sizes at a time 
@@ -51,7 +50,7 @@ for stock in stocks:
     #due to the limitation of my alpaca account, I cannot get the current day's first 15 minutes data.
 
 for symbol in qqq_symbols: 
-    day_bars=api.get_bars(symbol,TimeFrame.Day,"2022-01-01",yesterday,adjustment='raw').df  
+    day_bars=api.get_bars(symbol,TimeFrame.Day,"2022-04-01",yesterday,adjustment='raw').df  
     
     for index, row in day_bars.iterrows():
         try:

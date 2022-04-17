@@ -13,3 +13,9 @@ with open("qqq.csv") as f:
     for line in reader:
         #each line the first index is the company name and the second one is the symbol
         qqq_symbols.append(line[1])
+
+
+
+
+logs=[]
+runstrats=None
