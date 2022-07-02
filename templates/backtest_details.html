@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %}
+<div class="tradinglogs">
+  <div class="tradinglogs-heading">
+    <h3>TRADING LOGS</h3>
+  </div>
+
+  {% if backtest.result %}
+  <dl class="row">
+    <dt class="col-sm-3">Test Results for {{backtest.stock.symbol}}:</dt>
+    <dd class="col-sm-9">{{backtest.result}}</dd>
+
+    <dt class="col-sm-3">Trading Start Date:</dt>
+    <dd class="col-sm-9">{{ backtest.start_date.strftime('%Y-%m-%d') }}</dd>
+
+    <dt class="col-sm-3">Trading End Date:</dt>
+    <dd class="col-sm-9">{{ backtest.end_date.strftime('%Y-%m-%d') }}</dd>
+
+    <dt class="col-sm-3">Strategy Applied:</dt>
+    <dd class="col-sm-9">{{backtest.strategy.name}}</dd>
+
+    {% if backtest.note %}
+    <dt class="col-sm-3">Test Notes:</dt>
+    <dd class="col-sm-9">{{backtest.note}}</dd>
+    {% endif %}
+  </dl>
+  {% endif %}
+</div>
+
+<ul class="timeline">
+  {% for trading_log in trading_logs%}
+  <!-- to get rid of commas and curly braces -->
+  {% if trading_log|length > 1 %}
+  <!-- <li>{{log}}</li> -->
+  <li><span>{{trading_log}}</span></li>
+  {% endif %} {% endfor %}
+</ul>
+{% endblock %}

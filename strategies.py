@@ -2,15 +2,14 @@ import backtrader
 from datetime import date, datetime, time, timedelta
 from constants import logs
 
-# Create a Stratey
+# Create Backtesting Strategies based on backtrader's Strategy class. 
 
 class BuySlightDipStrategy(backtrader.Strategy):
 
     def log(self, txt, dt=None):
-        ''' Logging function fot this strategy'''
+        ''' Logging function for this strategy'''
         dt = dt or self.datas[0].datetime.date(0)
         logs.append('%s, %s' % (dt.isoformat(), txt))
-        # print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
@@ -55,7 +54,7 @@ class BuySlightDipStrategy(backtrader.Strategy):
 
 
 
-#opening range breakout
+
 class OpeningRangeBreakout(backtrader.Strategy):
     params = dict(
         num_opening_bars=15
@@ -69,10 +68,6 @@ class OpeningRangeBreakout(backtrader.Strategy):
         self.order = None
     
     def log(self, txt, dt=None):
-        # if dt is None:
-        #     dt = self.datas[0].datetime.datetime()
-        # logs.append('%s, %s' % (dt.isoformat(), txt))
-        # print('%s, %s' % (dt, txt))
         dt = dt or self.datas[0].datetime.date(0)
         logs.append('%s, %s' % (dt.isoformat(), txt))
         print('%s, %s' % (dt.isoformat(), txt))
@@ -166,7 +161,6 @@ class SmaStrategy(backtrader.Strategy):
     def log(self, txt,dt=None):
         dt = dt or self.datas[0].datetime.date(0)
         logs.append('%s, %s' % (dt.isoformat(), txt))
-        # print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -208,3 +202,141 @@ class SmaStrategy(backtrader.Strategy):
                 self.order = self.sell()
 
 
+# add a new strategy May 12th
+
+# Create a subclass of Strategy to define the indicators and logic
+class SmaCross(backtrader.Strategy):
+    # list of parameters which are configurable for the strategy
+    params = dict(
+        pfast=10,  # period for the fast moving average
+        pslow=30   # period for the slow moving average
+    )
+
+    def __init__(self):
+        sma1 = backtrader.ind.SMA(period=self.p.pfast)  # fast moving average
+        sma2 = backtrader.ind.SMA(period=self.p.pslow)  # slow moving average
+        self.crossover = backtrader.ind.CrossOver(sma1, sma2)  # crossover signal
+
+    def log(self, txt, dt=None):
+        ''' Logging function for this strategy'''
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+
+    def notify_order(self,order):
+        if order.status in [order.Submitted, order.Accepted]:
+            return 
+        if order.status in[order.Completed]:
+            if order.isbuy():
+                self.log("BUY EXECUTED{}".format(order.executed.price))
+
+            elif order.issell():
+                self.log("SELL EXECUTED{}".format(order.executed.price))
+            self.bar_executed = len(self)
+        self.order=None
+
+    def next(self):
+        if not self.position:  # not in the market
+            if self.crossover > 0:  # if fast crosses slow to the upside
+                self.order=self.buy()  # enter long
+
+        elif self.crossover < 0:  # in the market & cross to the downside
+            self.order=self.close()  # close long position
+
+
+# add some new strategies
+class FearGreedStrategy(backtrader.Strategy):
+    def log(self, txt, dt=None):
+        ''' Logging function fot this strategy'''
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt.isoformat(), txt))
+
+    def __init__(self):
+        self.fear_greed = self.datas[0].fear_greed
+        self.close = self.datas[0].close
+    
+    def notify_order(self,order):
+        if order.status in [order.Submitted, order.Accepted]:
+            return 
+        if order.status in[order.Completed]:
+            if order.isbuy():
+                self.log("BUY EXECUTED{}".format(order.executed.price))
+
+            elif order.issell():
+                self.log("SELL EXECUTED{}".format(order.executed.price))
+            self.bar_executed = len(self)
+        self.order=None
+
+    def next(self):
+        size = int(self.broker.getcash() / self.close[0])
+
+        if self.fear_greed[0] < 10 and not self.position:
+            self.buy(size=size)
+        if self.fear_greed[0] > 94 and self.position.size > 0:
+            self.sell(size=self.position.size)
+
+
+
+class PutCallStrategy(backtrader.Strategy):
+    def log(self, txt, dt=None):
+        ''' Logging function fot this strategy'''
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt.isoformat(), txt))
+
+    def __init__(self):
+        self.put_call = self.datas[0].put_call
+        self.close = self.datas[0].close
+    
+    def notify_order(self,order):
+        if order.status in [order.Submitted, order.Accepted]:
+            return 
+        if order.status in[order.Completed]:
+            if order.isbuy():
+                self.log("BUY EXECUTED{}".format(order.executed.price))
+
+            elif order.issell():
+                self.log("SELL EXECUTED{}".format(order.executed.price))
+            self.bar_executed = len(self)
+        self.order=None
+
+    def next(self):
+        size = int(self.broker.getcash() / self.close[0])
+
+        if self.put_call[0] > 1 and not self.position:
+            self.buy(size=size)
+        if self.put_call[0] < 0.45 and self.position.size > 0:
+            self.sell(size=self.position.size)
+
+
+class VIXStrategy(backtrader.Strategy):
+
+    def log(self, txt, dt=None):
+        ''' Logging function fot this strategy'''
+        dt = dt or self.datas[0].datetime.date(0)
+        logs.append('%s, %s' % (dt.isoformat(), txt))
+        # print('%s, %s' % (dt.isoformat(), txt))
+
+    def __init__(self):
+        self.vix = self.datas[0].vix
+        self.close = self.datas[0].close
+    
+    def notify_order(self,order):
+        if order.status in [order.Submitted, order.Accepted]:
+            return 
+        if order.status in[order.Completed]:
+            if order.isbuy():
+                self.log("BUY EXECUTED{}".format(order.executed.price))
+
+            elif order.issell():
+                self.log("SELL EXECUTED{}".format(order.executed.price))
+            self.bar_executed = len(self)
+        self.order=None
+
+    def next(self):
+        size = int(self.broker.getcash() / self.close[0])
+
+        if self.vix[0] > 35 and not self.position:
+            self.buy(size=size)
+        if self.vix[0] < 10 and self.position.size > 0:
+            self.sell(size=self.position.size)

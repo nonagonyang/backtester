@@ -1,74 +1,72 @@
 /* ====================== General */
 
 body {
-	background-color: #f7f2e7;
+  background-color: #f7f2e7;
 }
 
 body.error-404 {
-	background-color: #1da1f2;
+  background-color: #1da1f2;
 }
 
 .form-control {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .btn {
-	border-radius: 10px;
+  border-radius: 10px;
 }
 
 .btn:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 /* ======================= Nav */
 
 .navbar {
-	background-color: #aac9ce;
-	height: 46px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-	margin-bottom: 1rem;
-	position: relative;
-	z-index: 9999;
-	text-decoration: none;
-	font-family: 'Montserrat', sans-serif;
+  background-color: #aac9ce;
+  height: 46px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 9999;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
 }
 
 .navbar a {
-	color: #4b6e81;
-	font-size: 13px;
-	font-weight: bold;
-	text-decoration: none;
-	margin-top: 10px;
+  color: #4b6e81;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-top: 10px;
 }
 
 .navbar a:hover {
-	color: mediumaquamarine;
+  color: mediumaquamarine;
 }
 
 .navbar-brand {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-brand > img {
-	display: inline-block;
-	margin-top: 5px;
-	margin-bottom: 2px;
-	margin-right: 5px;
-	width: 20px;
-	border-radius: 2px;
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  margin-right: 5px;
+  width: 20px;
+  border-radius: 2px;
 }
 
-
 ul.nav.navbar-nav {
-	align-items: center;
+  align-items: center;
 }
 
 ul.nav.navbar-nav li {
-	margin: 0 0.5rem;
-	display: flex;
+  margin: 0 0.5rem;
+  display: flex;
 }
-
 
 /* on "onboarding" pages (signup & login), the navbar is
    different: no search box, the logo is centered, and it has
@@ -76,226 +74,258 @@ ul.nav.navbar-nav li {
  */
 
 .onboarding > .navbar {
-	background-size: 100% 100%;
+  background-size: 100% 100%;
 }
 
 .onboarding .navbar-header {
-	margin: 0 auto;
+  margin: 0 auto;
 }
 
 .onboarding .navbar-brand {
-	margin: 0;
+  margin: 0;
 }
 
 .onboarding .navbar-brand span {
-	display: none;
+  display: none;
 }
 
 .onboarding .nav.navbar-nav.navbar-right {
-	position: absolute;
-	right: 16px;
+  position: absolute;
+  right: 16px;
 }
 
 .onboarding > .navbar a {
-	color: #fff;
+  color: #fff;
 }
 
 .onboarding > .navbar form.navbar-form {
-	display: none;
+  display: none;
 }
 
 .onboarding {
-	background-color: #fff;
+  background-color: #fff;
 }
 
 @media (max-width: 468px) {
-	nav form.navbar-form {
-		display: none;
-	}
+  nav form.navbar-form {
+    display: none;
+  }
 }
 
 nav + .container {
-	margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
-
 
 /* ============================ Signed out home */
 
 .home-hero {
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-items: center;
-	position: absolute;
-	top: 0;
-	width: 100vw;
-	left: 0;
-	z-index: -1;
-	background-size: cover;
-	background-position: center center;
-	color: #fff;
-	text-align: center;
-	padding: 1rem;
-	text-shadow: 0 0 8px #66757f;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  left: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  text-shadow: 0 0 8px #66757f;
 }
 
 .home-hero .btn {
-	text-shadow: none;
-	position: relative;
-	z-index: 1;
-	width: 150px;
+  text-shadow: none;
+  position: relative;
+  z-index: 1;
+  width: 150px;
 }
 
 .home-hero h1 {
-	margin-bottom: 4rem;
+  margin-bottom: 4rem;
 }
 
 .home-hero:before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(255, 255, 255, 0.3);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
 }
-
-
 
 /* ========================== Homepage: Signup/Login */
 
 #user_form input.form-control {
-	font-size: 18px;
-	/* font-weight: bold; */
-	padding: 1px;
-	margin-top: 30px;
+  font-size: 18px;
+  /* font-weight: bold; */
+  padding: 1px;
+  margin-top: 30px;
 }
 
-#user_form_title{
-	color:#618396;
-	text-shadow: 2px 2px whitesmoke;
+#user_form_title {
+  color: #618396;
+  text-shadow: 2px 2px whitesmoke;
 }
-
-
 
 /* ================================ 404 page */
 
 .message-404 {
-	color: white;
-	margin-top: 2em;
-	text-align: center;
+  color: white;
+  margin-top: 2em;
+  text-align: center;
 }
 
 .message-404 a {
-	color: white;
+  color: white;
 }
 
 .message-404 > h4.display-4 {
-	font-size: 2.5em;
+  font-size: 2.5em;
 }
 
 .message-404 .form-inline input {
-	flex: 1;
+  flex: 1;
 }
 
 /* ================================  Homepage */
 
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 .container {
-    margin: 50px auto
+  margin: 50px auto;
 }
 
 .body {
-    position: relative;
-    width: 720px;
-    height: 440px;
-    margin: 20px auto;
-    border: 1px solid #dddd;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
+  position: relative;
+  width: 720px;
+  height: 440px;
+  margin: 20px auto;
+  border: 1px solid #dddd;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .box-1 img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .box-2 {
-    padding: 10px
+  padding: 10px;
 }
 
 .box-1,
 .box-2 {
-    width: 50%
+  width: 50%;
 }
 
 .h-1 {
-    font-size: 24px;
-    font-weight: 700
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .text-muted {
-    font-size: 14px
+  font-size: 14px;
 }
 
 .container .box {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    text-decoration: none;
-    color: #615f5fdd;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  text-decoration: none;
+  color: #615f5fdd;
 }
-
 
 .btn.btn-primary .fas.fa-chevron-right {
-    font-size: 12px
+  font-size: 12px;
 }
 
+@media (max-width: 767px) {
+  body {
+    padding: 10px;
+  }
 
+  .body {
+    width: 100%;
+    height: 100%;
+  }
 
-@media (max-width:767px) {
-    body {
-        padding: 10px
-    }
+  .box-1 {
+    width: 100%;
+  }
 
-    .body {
-        width: 100%;
-        height: 100%
-    }
-
-    .box-1 {
-        width: 100%
-    }
-
-    .box-2 {
-        width: 100%;
-        height: 440px
-    }
+  .box-2 {
+    width: 100%;
+    height: 440px;
+  }
 }
 
-#console {
-	background-color: #000;
-	font-family: courier, monospace;
-	color: greenyellow;
-	width:750px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-top:100px;
-	font-size:14px;
+/* backtest details page */
+
+ul.timeline li {
+  position: relative;
+  height: 3em;
+  color: #aaa;
+}
+
+ul.timeline li:before {
+  content: "";
+  display: inline-block;
+  height: 3em;
+  width: 1px;
+  background: #aaaa;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: -11px;
+  top: -0.4em;
+  z-index: -1;
+}
+
+ul.timeline:before {
+  content: "●";
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: -1em;
+  top: 0.1em;
+  color: #aaa;
+}
+
+ul.timeline:after {
+  content: "●";
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: -1em;
+  top: -1em;
+  color: #aaa;
+}
+
+div.tradinglogs {
+  color: #618396;
+}
+
+div.tradinglogs-heading {
+  margin-bottom: 20px;
 }

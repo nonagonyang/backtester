@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Test Results</h1>
+<h1>Test Records</h1>
 <div>
     <div class="container">
         <table class="table table-hover table-bordered">
@@ -18,16 +18,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% if tests %}
-                {% for test in tests %}
+                {% if backtests %}
+                {% for backtest in backtests %}
                 <tr>
-                    <td>{{test.stock.symbol}}</td>
-                    <td>{{test.strategy.name}}</td>
-                    <td>{{ test.start_date.strftime('%Y-%m-%d') }}</td>
-                    <td>{{ test.end_date.strftime('%Y-%m-%d') }}</td>
-                    <td>{{test.initial_cash}}</td>  
-                    <td>{{test.result_cash}}</td> 
-                    <td>{{test.result}}<span><a href="/tests/{{test.id}}"> details</a></span></td>
+                    <td>{{backtest.stock.symbol}}</td>
+                    <td>{{backtest.strategy.name}}</td>
+                    <td>{{ backtest.start_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ backtest.end_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{backtest.initial_cash}}</td>  
+                    <td>{{backtest.result_cash}}</td> 
+                    <td>{{backtest.result}}<span><a href="/backtests/{{backtest.id}}"> details</a></span></td>
                 </tr>
                 {% endfor %}
                 {% endif %}

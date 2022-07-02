@@ -10,8 +10,9 @@
                 <div class="d-flex align-items-center flex-column ">
                   <div class="col-md-6 rcol"></div>
                     <div class="d-flex align-items-center mb-3 pb-1">
-                      <span class="h4 fw-bold mb-0" id="user_form_title">Welcome back, Backtrader!</span>
+                      <span class="h4 fw-bold mb-0" id="user_form_title">Welcome back, Backtester!</span>
                     </div>
+
                     <form method="POST" id="user_form">
                       {{ form.hidden_tag() }}
                       {% for field in form if field.widget.input_type != 'hidden' %}
@@ -30,6 +31,7 @@
                           style="color: #393f81;">Register here</a></p>
                       </div>
                     </form>
+                    
                   </div>
                 </div>
             </div>

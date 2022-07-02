@@ -1,5 +1,4 @@
-
-from models import db, Stock,StockPrice,Strategy,Test,User
+from models import db, Stock,StockPrice,Strategy,Backtest,User
 from app import app
 import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import TimeFrame
@@ -12,7 +11,7 @@ db.create_all()
 
 Stock.query.delete()
 StockPrice.query.delete()
-Test.query.delete()
+Backtest.query.delete()
 User.query.delete()
 
 
@@ -50,7 +49,7 @@ for stock in stocks:
     #due to the limitation of my alpaca account, I cannot get the current day's first 15 minutes data.
 
 for symbol in qqq_symbols: 
-    day_bars=api.get_bars(symbol,TimeFrame.Day,"2022-04-01",yesterday,adjustment='raw').df  
+    day_bars=api.get_bars(symbol,TimeFrame.Day,"2022-06-01",yesterday,adjustment='raw').df  
     
     for index, row in day_bars.iterrows():
         try:
@@ -77,7 +76,7 @@ db.session.commit()
 
 #populate the strategies table in database manually
 
-strategies=["OpeningRangeBreakout","BuySlightDipStrategy","SmaStrategy"]
+strategies=["OpeningRangeBreakout","BuySlightDipStrategy","SmaStrategy","FearGreedStrategy","PutCallStrategy","VIXStrategy"]
 for strategy in strategies:
     strategy=Strategy(name=strategy)
     db.session.add(strategy)

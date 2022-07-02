@@ -42,9 +42,9 @@ class Strategy(db.Model):
     name=db.Column(db.Text, nullable=False)
     
 
-class Test(db.Model):
-    """Test"""
-    __tablename__="tests"
+class Backtest(db.Model):
+    """Backtest"""
+    __tablename__="backtests"
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id=db.Column(db.Integer,db.ForeignKey('users.id'),nullable=False)
     stock_id=db.Column(db.Integer, db.ForeignKey('stocks.id'), nullable=False)
@@ -53,12 +53,12 @@ class Test(db.Model):
     end_date=db.Column(db.DateTime, nullable=False)
     initial_cash=db.Column(db.Integer,nullable=False)
     result_cash=db.Column(db.Float,nullable=True)
-    logs=db.Column(db.Text, nullable=True)
+    trading_logs=db.Column(db.Text, nullable=True)
     result=db.Column(db.Text, nullable=True)
     note=db.Column(db.Text, nullable=True)
-    plot=db.Column(db.LargeBinary,nullable=True)
-    strategy=db.relationship('Strategy',backref='tests',cascade="all, delete")
-    stock=db.relationship('Stock',backref='tests',cascade="all, delete")
+    strategy=db.relationship('Strategy',backref='backtests',cascade="all, delete")
+    stock=db.relationship('Stock',backref='backtests',cascade="all, delete")
+    user=db.relationship('User',backref='backtests',cascade="all,delete")
 
 
 

@@ -12,6 +12,7 @@ class BackTestingForm(FlaskForm):
     strategy_id=SelectField("Choose a Strategy", validate_choice=False,coerce=int)
     start_date=DateField("Start date",format='%Y-%m-%d')
     end_date=DateField("End date",format='%Y-%m-%d')
+    note=StringField("Note")
 
 
 class UserAddForm(FlaskForm):
@@ -21,12 +22,12 @@ class UserAddForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=6)])
 
 
-class UserEditForm(FlaskForm):
-    """Form for editing users."""
+# class UserEditForm(FlaskForm):
+#     """Form for editing users."""
 
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[Length(min=6)])
+#     username = StringField('Username', validators=[DataRequired()])
+#     email = StringField('E-mail', validators=[DataRequired(), Email()])
+#     password = PasswordField('Password', validators=[Length(min=6)])
 
 
 class LoginForm(FlaskForm):

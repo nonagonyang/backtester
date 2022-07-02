@@ -1,25 +1,23 @@
 from flask import Flask, request, redirect, render_template,session,g,flash
 from sqlalchemy.exc import IntegrityError
-from models import db, connect_db, Stock, StockPrice,Strategy,Test,User
+from models import db, connect_db, Stock, StockPrice,Strategy,Backtest,User
 from forms import BackTestingForm,UserAddForm,LoginForm
-from test_strategy import test_strategy
-# from show_plot import getBacktestChart
+from apply_strategy import apply_strategy
 from constants import *
 
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///python_trader_db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    app.config['SECRET_KEY'] = "I'LL NEVER TELL!!"
+    connect_db(app)
+    return app
 
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///python_trader_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['SECRET_KEY'] = "I'LL NEVER TELL!!"
-
-connect_db(app)
+app=create_app()
 
 CURR_USER_KEY = "curr_user"
-
-
 
 ##############################################################################
 # User signup/login/logout
@@ -52,11 +50,8 @@ def do_logout():
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     """Handle user signup.
-
     Create new user and add to DB. Redirect to home page.
-
     If form not valid, present form.
-
     If the there already is a user with that username: flash message
     and re-present form.
     """
@@ -116,11 +111,8 @@ def logout():
 
 
 
-
 @app.route("/",methods=["GET", "POST"])
 def homepage():
-    # if CURR_USER_KEY in session:
-    #     del session[CURR_USER_KEY]
     if not g.user:
         form = LoginForm()
 
@@ -160,6 +152,9 @@ def show_stocks():
 
 @app.route("/stocks/<symbol>",methods=["GET", "POST"])
 def stock_details(symbol):
+    """
+    Page with one specific stock, trading view picture and the most recent prices (opening, high, low, close) of this stock.
+    """
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -168,9 +163,11 @@ def stock_details(symbol):
     return render_template("prices.html",stock=stock,prices=prices)                                            
 
 
-
 @app.route("/backtesting",methods=["GET", "POST"])
 def new_test():
+    """
+    Page with a form that allows user to select parameters(stock, strategy, cash amount, start date, end date) as well as notes to perform backtest.
+    """
     if not g.user:
         flash("Access unauthorized.Sign up or log in.", "danger")
         return redirect("/")
@@ -180,8 +177,8 @@ def new_test():
 
     if form.validate_on_submit():
         user_id=session[CURR_USER_KEY]
-        cash_amount_str=form.cash_amount.data
-        cash_amount=int(cash_amount_str)
+        note=form.note.data
+        cash_amount=int(form.cash_amount.data)
         strategy_id=int(form.strategy_id.data)
         strategy=Strategy.query.get(strategy_id)
         strategy_name=strategy.name
@@ -190,41 +187,47 @@ def new_test():
         stock_symbol=stock.symbol
         start_date=form.start_date.data
         end_date=form.end_date.data
-        result_cash=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[0]
+
+        # apply_strategy returns a list of two values: result_cash and trading_logs
+        result_cash=apply_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[0]
         if result_cash-cash_amount>0:
             result=f'You have earned {round((result_cash-cash_amount),2)}'
         else:
             result=f'You have lost {round((cash_amount-result_cash),2)}'
-        logs=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[1]
-        # runstrats=test_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[2]
-        # plot=getBacktestChart(runstrats)
-        new_test=Test(stock_id=stock_id,strategy_id=strategy_id,user_id=user_id,
+        trading_logs=apply_strategy(cash_amount,stock_symbol,strategy_name,start_date, end_date)[1]
+        
+        new_backtest=Backtest(stock_id=stock_id,strategy_id=strategy_id,user_id=user_id,
                 start_date=start_date,end_date=end_date,
-                initial_cash=cash_amount,result_cash=round(result_cash,2),result=result,logs=logs)
-        db.session.add(new_test)
+                initial_cash=cash_amount,result_cash=round(result_cash,2),result=result,trading_logs=trading_logs,note=note)
+        db.session.add(new_backtest)
         db.session.commit()
-        return redirect(f"/tests/{new_test.id}")
+        return redirect(f"/backtests/{new_backtest.id}")
 
     return render_template("backtesting.html",form=form)
 
-@app.route("/tests")
-def show_tests():
+@app.route("/backtests")
+def show_backtests():
+    """
+    page show user's backtesting records
+    """
     if not g.user:
         flash("Access unauthorized. Sign up or log in.", "danger")
         return redirect("/")
     user_id=session[CURR_USER_KEY]
-    tests=Test.query.filter_by(user_id=user_id).all()
-    return render_template("testresults.html", tests=tests)
+    backtests=Backtest.query.filter_by(user_id=user_id).all()
+    return render_template("backtest_results.html", backtests=backtests)
 
-@app.route("/tests/<test_id>")
-def show_test_result(test_id):
+@app.route("/backtests/<backtest_id>")
+def show_test_result(backtest_id):
+    """
+    page show one specific backtest's details: trading logs
+    """
     if not g.user:
         flash("Access unauthorized. Sign up or log in.", "danger")
         return redirect("/")
-    test=Test.query.filter_by(id=test_id).first()
-    logs=test.logs.split('"')
-    return render_template("test_details.html", test=test,logs=logs)
-
+    backtest=Backtest.query.filter_by(id=backtest_id).first()
+    trading_logs=backtest.trading_logs.split('"')
+    return render_template("backtest_details.html", backtest=backtest,trading_logs=trading_logs)
 
 @app.errorhandler(404)
 def page_not_found(e):

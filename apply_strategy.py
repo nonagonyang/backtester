@@ -1,17 +1,18 @@
 import backtrader
-from strategies import *
 from alpaca_trade_api.rest import TimeFrame
 import alpaca_trade_api as tradeapi
-import config
+from config import API_KEY_ID,SECRET_KEY,BASE_URL
+from constants import logs
+from strategies import *
 
-api=tradeapi.REST(config.API_KEY_ID,
-                config.SECRET_KEY,
-                base_url=config.BASE_URL)
+api=tradeapi.REST(API_KEY_ID,
+                SECRET_KEY,
+                BASE_URL)
 
 
-# test_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
+# apply_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
 
-def test_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
+def apply_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
     cerebro=backtrader.Cerebro()
     cerebro.broker.setcash(cash_amount)
     cerebro.addsizer(backtrader.sizers.PercentSizer, percents=95)
@@ -36,13 +37,20 @@ def test_strategy(cash_amount,stock_symbol,strategy_name,start_date,end_date):
         cerebro.addstrategy(OpeningRangeBreakout)
     if strategy_name=="SmaStrategy":
         cerebro.addstrategy(SmaStrategy)
+    if strategy_name=="VIXStrategy":
+        cerebro.addstrategy(VIXStrategy)
+    if strategy_name=="FearGreedStrategy":
+        cerebro.addstrategy(FearGreedStrategy)
+    if strategy_name=="PutCallStrategy":
+        cerebro.addstrategy(PutCallStrategy)
+
 
 
     print("starting portfolio value %.2f" % cerebro.broker.getvalue())
     cerebro.run()
-    runstrats=cerebro.run()
+    # runstrats=cerebro.run()
     print("ending portfolio value %.2f" % cerebro.broker.getvalue())
-    return [cerebro.broker.getvalue(),logs,runstrats]
+    return [cerebro.broker.getvalue(),logs]
 
 
 

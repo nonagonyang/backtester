@@ -25,35 +25,24 @@
       <ol class="breadcrumb">
         <a href="/" class="navbar-brand">
           <img src="https://media.istockphoto.com/vectors/bold-letter-b-logo-design-element-negative-space-style-two-letters-bc-vector-id1165333600?k=20&m=1165333600&s=612x612&w=0&h=C1Yb7Hk6EeSdxMoGQY1Tj8bRk-aXtAG4CraqYRRqxqg=" alt="logo">
-          <span>BackTrader</span>
+          <span>BackTester</span>
         </a>
         
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li cclass="nav-item"><a class="nav-link" href="/stocks">Stocks</a></li>
         <li class="nav-item"><a class="nav-link" href="/backtesting">Backtesting</a></li>
-        <li class="nav-item"><a class="nav-link" href="/tests">Tests</a></li>
+        <li class="nav-item"><a class="nav-link" href="/backtests">Test Journal</a></li>
       </ol>
       
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <!-- {% if request.endpoint != None %}
-      <li>
-        <form class="navbar-form navbar-right" action="/stocks">
-           <input name="q" class="form-control" placeholder="Search Stock Symbol" id="search">
-          <button class="btn btn-default">
-            <span class="fa fa-search"></span>
-          </button>
-        </form>
-      </li>
-      {% endif %} -->
-
       
       {% if not g.user %}
      <li><a href="/signup">Sign up</a></li>
       <li><a href="/login">Log in</a></li>
       {% else %}
       <li>
-        <li> <a>{{ g.user.username }}</a></li>
+        <li> <a href="/">{{ g.user.username }}</a></li>
       </li>
       <li><a href="/logout">Log out</a></li>
       {% endif %}
