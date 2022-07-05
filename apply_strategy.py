@@ -1,9 +1,15 @@
 import backtrader
 from alpaca_trade_api.rest import TimeFrame
 import alpaca_trade_api as tradeapi
-from config import API_KEY_ID,SECRET_KEY,BASE_URL
 from constants import logs
 from strategies import *
+
+# Config info for Alpaca API 
+API_KEY_ID="PKM0DJCG7IAOV58B46UZ"
+SECRET_KEY="zGonXYFAqvw7bciS4iZDoJpenEKZbkgS6j3WQDE0"
+BASE_URL="https://paper-api.alpaca.markets"
+
+
 
 api=tradeapi.REST(API_KEY_ID,
                 SECRET_KEY,
