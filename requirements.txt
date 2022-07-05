@@ -37,7 +37,6 @@ packaging==21.3
 pandas==1.3.5
 Pillow==9.0.1
 pluggy==1.0.0
-psycopg2 @ file:///Users/runner/miniforge3/conda-bld/psycopg2-split_1640944573966/work
 psycopg2-binary==2.9.3
 py==1.11.0
 pycparser==2.21
