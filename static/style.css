@@ -38,7 +38,8 @@ body.error-404 {
   font-size: 13px;
   font-weight: bold;
   text-decoration: none;
-  margin-top: 10px;
+  margin-top: 25px;
+  padding-left: 30px;
 }
 
 .navbar a:hover {
@@ -48,6 +49,7 @@ body.error-404 {
 .navbar-brand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .navbar-brand > img {
