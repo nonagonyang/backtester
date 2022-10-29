@@ -1,6 +1,11 @@
 
 ## BackTester visit 👉 https://strategy-backtester.herokuapp.com 
 
+
+
+https://user-images.githubusercontent.com/28469448/198850050-6a27522d-394f-411f-8f3c-c11a72b369d4.mp4
+
+
 ## About
 * This website allows users to view QQQ stocks and browse stock prices(high, low, close, open) of the recent month. And most importantly, this website allows users to test their trading strategies on their selected stock. It will show users how much they would earn or lose if they used a trading strategy on a certain stock over a certain period.    
 
